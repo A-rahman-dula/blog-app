@@ -1,24 +1,31 @@
+// src/store/store.ts
 import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import rootReducer from './rootReducer';
+import { persistStore } from 'redux-persist';
+import persistedReducer from './rootReducer';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-};
+import {
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
+// Create the store with middleware to handle redux-persist
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore non-serializable values from redux-persist
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 });
 
+// Create the persistor
 export const persistor = persistStore(store);
+
+// Export RootState and AppDispatch types for TS usage
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
