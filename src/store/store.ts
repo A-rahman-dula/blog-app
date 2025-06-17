@@ -1,8 +1,6 @@
-// src/store/store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore } from 'redux-persist';
 import persistedReducer from './rootReducer';
-
 import {
   FLUSH,
   REHYDRATE,
@@ -26,6 +24,6 @@ export const store = configureStore({
 // Create the persistor
 export const persistor = persistStore(store);
 
-// Export RootState and AppDispatch types for TS usage
+// Export RootState and AppDispatch types for TypeScript usage
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
